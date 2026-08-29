@@ -222,13 +222,7 @@ A few choices worth calling out, since they reflect real engineering trade-offs 
 - **Evidence pools over free-form generation** — Worker 1 is only allowed to discuss companies the backend actually fetched real fundamentals for. This is enforced with a backend guardrail that flags any recommendation not traceable to fetched data, rather than trusting the model's output at face value.
 - **Last-known-good caching over bare try/catch** — a flaky upstream API (Yahoo Finance's fundamentals endpoint in particular, which requires a fragile cookie/crumb handshake) shouldn't make the whole dashboard look broken. Staleness is tracked and surfaced explicitly rather than silently shown as current.
 - **Explicit scope limits** — NSE F&O chain, full global currency coverage, and a Bloomberg-grade news feed are intentionally out of scope, since no free/compliant source exists for them. Being upfront about that is more credible than quietly faking it.
-
-## Roadmap
-
-- [ ] Agent 3 — Portfolio Risk Manager (VaR, drawdown, correlation exposure)
-- [ ] Walk-forward validation and benchmark comparison for backtests
-- [ ] Broker API integration (Kite Connect / Upstox) for a real NSE F&O options chain
-- [ ] Additional risk metrics (Sortino, max drawdown, beta) in the Risk Lab
+  
 
 ## License
 
