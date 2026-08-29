@@ -1,6 +1,11 @@
 # Chief Finance Wiz
 
 **A live, multi-agent financial intelligence dashboard.** Six specialist AI agents — fundamental research, markets & bullion, quant allocation, technicals, geopolitical intelligence, and political-statement analytics — report to a master orchestrator on top of real, live market data.
+## 🚀 Live Demo
+
+### [▶ Launch Chief Finance Wiz](https://financial-intelligence-dashboard-8qbo.onrender.com)
+
+> The dashboard may take a few seconds to start on the first visit if the Render service is sleeping.
 
 ## 🎥 UI Preview
 
