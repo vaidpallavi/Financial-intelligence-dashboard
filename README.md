@@ -2,7 +2,13 @@
 
 **A live, multi-agent financial intelligence dashboard.** Six specialist AI agents — fundamental research, markets & bullion, quant allocation, technicals, geopolitical intelligence, and political-statement analytics — report to a master orchestrator on top of real, live market data.
 
-![UI preview](docs/screenshot.png)
+## 🎥 UI Preview
+
+### Chief Finance Wiz Dashboard Walkthrough
+
+
+https://github.com/user-attachments/assets/c77796f1-a5ef-4ae0-a029-d4b57cea26c3
+
 
 [![Node](https://img.shields.io/badge/node-%3E%3D18-339933?logo=node.js&logoColor=white)](https://nodejs.org)
 [![Express](https://img.shields.io/badge/backend-Express-000000?logo=express&logoColor=white)](https://expressjs.com)
