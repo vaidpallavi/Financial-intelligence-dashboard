@@ -13,7 +13,7 @@ https://github.com/user-attachments/assets/c77796f1-a5ef-4ae0-a029-d4b57cea26c3
 [![Node](https://img.shields.io/badge/node-%3E%3D18-339933?logo=node.js&logoColor=white)](https://nodejs.org)
 [![Express](https://img.shields.io/badge/backend-Express-000000?logo=express&logoColor=white)](https://expressjs.com)
 [![Claude API](https://img.shields.io/badge/AI-Claude%20API-D97757?logo=anthropic&logoColor=white)](https://www.anthropic.com)
-[![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+
 
 ---
 
@@ -31,8 +31,7 @@ https://github.com/user-attachments/assets/c77796f1-a5ef-4ae0-a029-d4b57cea26c3
 - [Project structure](#project-structure)
 - [Deployment](#deployment)
 - [Design decisions](#design-decisions)
-- [Roadmap](#roadmap)
-- [License](#license)
+
 
 ---
 
@@ -229,10 +228,6 @@ A few choices worth calling out, since they reflect real engineering trade-offs 
 - **Last-known-good caching over bare try/catch** — a flaky upstream API (Yahoo Finance's fundamentals endpoint in particular, which requires a fragile cookie/crumb handshake) shouldn't make the whole dashboard look broken. Staleness is tracked and surfaced explicitly rather than silently shown as current.
 - **Explicit scope limits** — NSE F&O chain, full global currency coverage, and a Bloomberg-grade news feed are intentionally out of scope, since no free/compliant source exists for them. Being upfront about that is more credible than quietly faking it.
   
-
-## License
-
-[MIT](LICENSE) — free to use, modify, and learn from.
 
 ---
 
