@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Chief Finance Wiz — Live Desk</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
+<link rel="stylesheet" href="style.css"/>
+</head>
+<body>
+
+<div class="tape" id="tape"><div class="tape-track" id="tapeTrack">Loading live tape…</div></div>
+
+<div class="shell">
+  <aside class="side">
+    <div class="side-hd">
+      <div class="brand"><span class="brand-dot"></span>CHIEF FINANCE WIZ</div>
+      <div class="brand-sub" id="clock">—</div>
+    </div>
+    <div class="side-stat" id="sideStat">
+      <div class="stat-row"><span>Session</span><b id="sessionState">—</b></div>
+      <div class="stat-row"><span>Agents</span><b class="ok">6 live</b></div>
+    </div>
+    <div style="padding:10px 16px;border-bottom:1px solid var(--line)">
+      <button class="btn primary" id="runAllBtn" style="width:100%">⚡ Run all 6 agents now</button>
+      <div class="note" id="runAllStatus" style="margin-top:6px"></div>
+    </div>
+    <div class="chat" id="chat"></div>
+    <form class="chat-in" id="chatForm">
+      <input id="chatInput" placeholder="Ask the Chief Finance Wiz…" autocomplete="off"/>
+      <button type="submit">→</button>
+    </form>
+    <div style="padding:8px 16px;text-align:center;font-size:10px;color:var(--ink3);font-family:var(--mono);border-top:1px solid var(--line)">
+      Developed by <b style="color:var(--ink2)">Pallavi Vaid</b>
+    </div>
+  </aside>
+
+  <button class="btn" id="logoutBtn" title="Sign out" style="position:fixed;top:38px;right:16px;z-index:100;box-shadow:0 4px 14px rgba(0,0,0,.4)">Sign out</button>
+
+  <main class="main">
+    <header class="topbar">
+      <div class="pills" id="pills">
+        <span class="pill">Connecting…</span>
+      </div>
+      <div class="actions">
+        <button class="btn" id="exportInvestBtn">Export Investment CSV</button>
+        <button class="btn" id="exportPolBtn">Export Political CSV</button>
+        <button class="btn primary" id="refreshBtn">Refresh all</button>
+      </div>
+    </header>
+
+    <section class="panel">
+      <div class="panel-hd"><h2>Chief Finance Wiz — Morning Intelligence Brief</h2></div>
+      <div class="card">
+        <div id="morningBriefGrid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:10px;margin-bottom:14px"></div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <button class="btn" id="briefEvidenceBtn">View Evidence →</button>
+          <button class="btn" id="briefAskBtn">Ask Investment Committee →</button>
+          <button class="btn" id="briefStressBtn">Run Stress Test →</button>
+          <button class="btn primary" id="briefReportBtn">Generate Report →</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel">
+      <div class="panel-hd"><h2>Live Market Rates</h2></div>
+      <div class="tabs">
+        <button class="tab active" data-tab="india">India</button>
+        <button class="tab" data-tab="global">Global</button>
+        <button class="tab" data-tab="both">Both</button>
+      </div>
+
+      <div class="tabpanel active" data-panel="india">
+        <div class="card"><div class="card-hd">Indian Indices</div><div class="grid" id="idxIndia"></div></div>
+        <div class="card">
+          <div class="card-hd">Gold &amp; Silver — India (live-derived)</div>
+          <table class="tbl" id="bullionIndiaTbl"></table>
+          <p class="note" id="bullionBasis"></p>
+        </div>
+        <div class="card"><div class="card-hd">Crypto — INR</div><div class="grid" id="cryptoIndia"></div></div>
+        <div class="card"><div class="card-hd">Gold — 30-Day Price Trend (Line)</div><div class="chart" id="chartGoldLine"></div></div>
+        <div class="card">
+          <div class="card-hd">NIFTY Futures — Theoretical Fair Value <span style="text-transform:none;font-weight:400">(cost-of-carry, not live NSE F&amp;O)</span></div>
+          <div id="niftyFairValue"><span class="note">Loading…</span></div>
+        </div>
+        <div class="card"><div class="card-hd">NIFTY 50 — Candlestick</div><div class="chart" id="chartNifty"></div></div>
+      </div>
+
+      <div class="tabpanel" data-panel="global">
+        <div class="card"><div class="card-hd">Global Indices</div><div class="grid" id="idxGlobal"></div></div>
+        <div class="card"><div class="card-hd">Commodities — COMEX / NYMEX</div><table class="tbl" id="commTbl"></table></div>
+        <div class="card"><div class="card-hd">Global Index Futures (Live)</div><div class="grid" id="indexFuturesGrid"></div></div>
+        <div class="card"><div class="card-hd">Crypto — USD</div><div class="grid" id="cryptoGlobal"></div></div>
+        <div class="card"><div class="card-hd">Forex — Key Pairs (vs INR)</div><div class="grid" id="fxGrid"></div></div>
+        <div class="card"><div class="card-hd">BTC/USD — Candlestick</div><div class="chart" id="chartBtc"></div></div>
+      </div>
+
+      <div class="tabpanel" data-panel="both">
+        <div class="twocol">
+          <div class="card"><div class="card-hd">India Indices</div><div class="grid" id="bothIndia"></div></div>
+          <div class="card"><div class="card-hd">Global Indices</div><div class="grid" id="bothGlobal"></div></div>
+        </div>
+        <div class="card"><div class="card-hd">Sector Money Flow — Today (Rs Cr)</div><div class="chart" id="chartFlow"></div></div>
+      </div>
+    </section>
+
+    <section class="panel">
+      <div class="panel-hd"><h2>Market Risk &amp; Regime Intelligence</h2><span class="hint">Worker 07 — real logistic regression / Random Forest / GARCH / Isolation Forest, computed here, zero LLM calls</span></div>
+      <div class="card">
+        <div style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:12px">
+          <button class="btn primary" id="runRegimeBtn">Run Regime Analysis</button>
+          <button class="btn" id="compareModelsBtn" disabled>Compare ML Models (Naive / Logistic / NN / Gradient Boosting)</button>
+        </div>
+        <div id="regimeResult"><p class="note">Click "Run Regime Analysis" — this fetches a year of history and trains everything fresh (~1-2 seconds), it is not pre-computed.</p></div>
+        <div id="modelCompareResult" style="margin-top:14px"></div>
+      </div>
+    </section>
+
+    <section class="panel">
+      <div class="panel-hd"><h2>Risk Lab</h2><span class="hint">Enter a portfolio — real risk metrics + Monte Carlo simulation via historical bootstrap, no LLM involved</span></div>
+      <div class="card">
+        <div class="card-hd">Portfolio Holdings</div>
+        <div id="riskHoldingsList"><p class="note">No holdings added yet.</p></div>
+        <div class="techsearch" style="margin-top:10px">
+          <input type="text" id="riskSymbolInput" placeholder="Search stock, crypto, or metal…" autocomplete="off"/>
+          <div class="techsuggest" id="riskSuggest"></div>
+        </div>
+        <div style="display:flex;gap:10px;margin-top:8px;flex-wrap:wrap;align-items:flex-end">
+          <label style="font-size:11px;color:var(--ink2)">Amount (₹)<input type="number" id="riskAmountInput" value="100000" style="display:block;margin-top:4px;background:var(--panel2);border:1px solid var(--line2);border-radius:6px;padding:6px 9px;color:var(--ink);width:140px"/></label>
+          <button class="btn" id="riskAddBtn">Add Holding</button>
+        </div>
+        <div style="display:flex;gap:10px;margin-top:16px;padding-top:12px;border-top:1px solid var(--line);flex-wrap:wrap;align-items:flex-end">
+          <label style="font-size:11px;color:var(--ink2)">Monte Carlo horizon (trading days)<input type="number" id="riskHorizon" value="252" style="display:block;margin-top:4px;background:var(--panel2);border:1px solid var(--line2);border-radius:6px;padding:6px 9px;color:var(--ink);width:120px"/></label>
+          <label style="font-size:11px;color:var(--ink2)">Target return %<input type="number" id="riskTarget" value="10" style="display:block;margin-top:4px;background:var(--panel2);border:1px solid var(--line2);border-radius:6px;padding:6px 9px;color:var(--ink);width:100px"/></label>
+          <button class="btn primary" id="riskAnalyzeBtn">Run Risk Analysis</button>
+        </div>
+        <div id="riskResult" style="margin-top:16px"></div>
+      </div>
+    </section>
+
+    <section class="panel">
+      <div class="panel-hd"><h2>Global Intelligence Feed</h2><span class="hint">Live RSS — ET, LiveMint, Business Standard, Moneycontrol, WSJ</span></div>
+      <div class="card" id="newsCard"><p class="note">Loading live news…</p></div>
+    </section>
+
+    <section class="panel">
+      <div class="panel-hd"><h2>6-Agent Workspace</h2></div>
+      <div class="workers" id="workers"></div>
+    </section>
+
+    <section class="panel">
+      <div class="panel-hd"><h2>IPO Watchlist — Predictive Analysis</h2><span class="hint">Worker 03 · financial health, market position, news sentiment &amp; risk flags</span>
+        <button class="btn sm" id="exportIpoBtn" style="margin-left:auto">Export CSV</button>
+      </div>
+      <div class="tblwrap"><table class="tbl wide" id="ipoTbl">
+        <thead><tr><th>Company</th><th>Sector</th><th>Timeline</th><th>Financial Health</th><th>Market Position</th><th>News Sentiment</th><th>Conviction</th><th>Risk Flags</th><th>Recommended ₹</th><th>Verdict</th></tr></thead>
+        <tbody><tr><td colspan="10" class="empty">Not yet run — dispatch Worker 03 below.</td></tr></tbody>
+      </table></div>
+      <div class="foot" id="ipoFoot"></div>
+    </section>
+
+    <section class="panel">
+      <div class="panel-hd"><h2>Investment Allocation Report</h2><span class="hint">Worker 03 → Chief Finance Wiz → You</span></div>
+      <div class="tblwrap"><table class="tbl wide" id="investTbl">
+        <thead><tr><th>#</th><th>Instrument</th><th>Type</th><th>Market</th><th>Conviction</th><th>Amount</th><th>Upside</th><th>Entry</th><th>Exit</th><th>Stop-loss</th><th>Horizon</th><th>Rationale</th></tr></thead>
+        <tbody><tr><td colspan="12" class="empty">Not yet run — dispatch Worker 03 below.</td></tr></tbody>
+      </table></div>
+      <div class="foot" id="investFoot"></div>
+      <div class="card" style="border-top-left-radius:0;border-top-right-radius:0;margin-top:-1px">
+        <div class="card-hd">Allocation by Instrument Type (Pie)</div>
+        <div class="chart" id="chartAllocPie"></div>
+      </div>
+    </section>
+
+    <section class="panel">
+      <div class="panel-hd"><h2>Political Statements — Market Impact &amp; Predictive Calls</h2><span class="hint">Worker 06</span></div>
+      <div class="tblwrap"><table class="tbl wide" id="polTbl">
+        <thead><tr><th>Leader / Country</th><th>Statement</th><th>Immediate Impact</th><th>6–18M Consequence</th><th>Sectors</th><th>Impact</th><th>Call</th><th>Entry</th><th>Exit</th><th>Suggested Rs</th></tr></thead>
+        <tbody><tr><td colspan="10" class="empty">Not yet run — dispatch Worker 06 below.</td></tr></tbody>
+      </table></div>
+      <div class="foot" id="polFoot"></div>
+    </section>
+
+    <section class="panel">
+      <div class="panel-hd"><h2>Live Currency Converter</h2><span class="hint">ECB reference rates via Frankfurter</span></div>
+      <div class="card">
+        <div class="ccrow">
+          <label>Amount (INR)<input type="number" id="ccAmount" value="100000"/></label>
+          <label>Convert to<select id="ccTarget"></select></label>
+          <div class="ccresult" id="ccResult">—</div>
+        </div>
+        <div class="grid" id="ccGrid"></div>
+      </div>
+    </section>
+  </main>
+</div>
+
+<div class="modal-bg" id="modalBg">
+  <div class="modal">
+    <div class="modal-hd"><h3 id="modalTitle">Dispatch task</h3><button id="modalClose">×</button></div>
+    <textarea id="modalInput" rows="4" placeholder="e.g. Deep-dive on Tata Motors with entry/exit and stop-loss"></textarea>
+    <div class="modal-ft"><button class="btn" id="modalCancel">Cancel</button><button class="btn primary" id="modalSend">Dispatch</button></div>
+  </div>
+</div>
+
+<script src="app.js"></script>
+</body>
+</html>

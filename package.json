@@ -1,0 +1,23 @@
+{
+  "name": "cfw-dashboard",
+  "version": "1.1.0",
+  "description": "Chief Finance Wiz - live multi-agent investment dashboard (hybrid monolith: Express backend + static frontend), password-protected with a hard daily spend cap",
+  "type": "module",
+  "main": "server.js",
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js"
+  },
+  "dependencies": {
+    "cookie-parser": "^1.4.6",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "express-rate-limit": "^7.4.0",
+    "node-cache": "^5.1.2",
+    "rss-parser": "^3.13.0"
+  }
+}
